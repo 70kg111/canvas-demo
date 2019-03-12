@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>JS Bin</title>
+</head>
+<body>
+
+    <style>
+        body{
+        margin: 0;
+    }
+    
+    #xxx{
+        display: block;
+    }
+    
+    button{
+        display: flex;
+        left:0;
+        top:0;
+    }
+    </style>
+
+  <canvas id='xxx' width=300 height=300></canvas>
+
+  <script>
+  
+    var yyy = document.getElementById('xxx');
+    var ctx = yyy.getContext('2d');
+
+
+//drawCircle(150,150,10);
+
+
+    var painting = false;
+    var lastPoint = {x:undefined, y:undefined};
+
+    wandh();
+    window.onresize = function(){
+    wandh();
+    }
+
+    //1.点击鼠标
+    yyy.onmousedown = function(aaa){
+    painting = true;
+    var x = aaa.clientX;
+    var y = aaa.clientY;
+    lastPoint = {x:x,y:y};
+    }
+
+
+    //2.按住鼠标移动
+    yyy.onmousemove = function(aaa){
+    if(painting){
+        var x = aaa.clientX;
+        var y = aaa.clientY;
+        var newPoint = {x:x,y:y};
+        drawLine(lastPoint.x,lastPoint.y,newPoint.x,newPoint.y);
+        lastPoint = newPoint;  //这句代码是精华所在
+    }
+    }
+
+
+    //3.松开鼠标
+    yyy.onmouseup = function(aaa){
+    painting = false;
+    }
+
+
+    function drawLine(x1,y1,x2,y2){    //连接两个点中的线
+    ctx.beginPath();
+    ctx.moveTo(x1,y1);
+    ctx.lineWidth = 5;
+    ctx.lineTo(x2,y2);
+    ctx.stroke();
+    ctx.closePath();
+    }
+
+    function drawCircle(x,y,radius){    //画点
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI*2);
+    ctx.fill();
+    }
+
+    function wandh(){   //获取页面宽高，也是一个API
+    var pageWidth = document.documentElement.clientWidth;
+    var pageHeight = document.documentElement.clientHeight;
+    
+    yyy.width = pageWidth;
+    yyy.height = pageHeight;
+    }
+    
+    </script>
+    
+    </body>
+</html>
